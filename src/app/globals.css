@@ -24,6 +24,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+ul {
+  list-style: none;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -39,4 +43,8 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+.name{
+  opacity: 0.5;
 }
