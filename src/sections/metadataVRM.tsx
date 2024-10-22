@@ -20,7 +20,7 @@ function renderLinkOrText(text: string | null | undefined) {
     }
 }
 
-export function displayMetadataVRM(metadata: ifMetadataVRM) {
+export function displayMetadataVRM(metadata: ifMetadataVRM | ifMetadataVRMC) {
     return (
         <>
             <h3 className={styles['meta-title']}>VRM Metadata (v0dx)</h3>
@@ -28,23 +28,6 @@ export function displayMetadataVRM(metadata: ifMetadataVRM) {
                 {Object.entries(metadata).map(([key, value]) => (
                     <li key={key}>
                         <span className={styles['meta-key']}>{key}</span>: {renderLinkOrText(value)}
-                    </li>
-                ))}
-            </ul>
-        </>
-    );
-}
-
-export function displayMetadataVRMC(metadata: ifMetadataVRMC) {
-    return (
-        <>
-            <h3 className={styles['meta-title']}>VRMC Metadata (v1dx)</h3>
-            <ul>
-                {Object.entries(metadata).map(([key, value]) => (
-                    <li key={key}>
-                        <span className={styles['meta-key']}>{key}</span>: {Array.isArray(value) ? value.map((item, index) => (
-                            <span key={index}>{item}{index < value.length - 1 ? ', ' : ''}</span>
-                        )) : renderLinkOrText(value)}
                     </li>
                 ))}
             </ul>

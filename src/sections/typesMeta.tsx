@@ -26,7 +26,7 @@ export interface ifMetadataVRMC {
     avatarPermission: "onlyAuthor" | "everyone";
     allowExcessivelyViolentUsage: boolean;
     allowExcessivelySexualUsage: boolean;
-    commercialUsage: "allow" | "disallow";
+    commercialUsage: string;
     allowPoliticalOrReligiousUsage: boolean;
     creditNotation: "required" | "unnecessary";
     allowRedistribution: boolean;
