@@ -6,3 +6,16 @@
   margin-top: 24px;
 }
 
+.meta-key{
+  opacity: 0.5;
+}
+
+.meta-title{
+  font-size: 2rem;
+  margin-bottom: 8px;
+  color: bisque;
+}
+
+.meta-link{
+  color: aquamarine;
+}

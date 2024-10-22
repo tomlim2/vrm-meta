@@ -1,18 +1,13 @@
 "use client"
-import { displayMetadataVRM, displayMetadataVRMC } from './metadataVRM'
-import { ifMetadataVRM, ifMetadataVRMC } from './metadataVRM'
+import {  displayMetadataVRM } from './metadataVRM'
+import { ifMetadataVRM, ifMetadataVRMC } from './typesMeta'
 import styles from "./metadataViewer.module.css";
 import { useState } from 'react';
 
-type tVRM = ifMetadataVRM | null;
-type tVRMC = ifMetadataVRMC | null;
+type tVRM = ifMetadataVRM | ifMetadataVRMC | null;
 
-interface ifMetadata {
-    vrm: tVRM;
-    vrmc: tVRMC;
-}
 
-const loadVrmMetadataFromFile = async (file: File): Promise<ifMetadata> => {
+const loadVrmMetadataFromFile = async (file: File): Promise<tVRM> => {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
 
@@ -40,8 +35,6 @@ const loadVrmMetadataFromFile = async (file: File): Promise<ifMetadata> => {
             const jsonText = new TextDecoder().decode(new Uint8Array(arrayBuffer, offset + 8, chunkLength));
             const json = JSON.parse(jsonText);
 
-            console.log(json, 'json');
-
             if (!json.extensions || !json.extensions.VRM) {
                 if (!json.extensions.VRMC_vrm //vroid studio 
                 ) {
@@ -50,16 +43,14 @@ const loadVrmMetadataFromFile = async (file: File): Promise<ifMetadata> => {
             }
 
             let vrmMeta: tVRM = null;
-            let vrmcMeta: tVRMC = null;
 
             if (json.extensions.VRM) {
-                console.log('hi VRM');
                 vrmMeta = json.extensions.VRM.meta;
             } else if (json.extensions.VRMC_vrm) {
-                vrmcMeta = json.extensions.VRMC_vrm.meta;
+                vrmMeta = json.extensions.VRMC_vrm.meta;
             }
 
-            resolve({ vrm: vrmMeta, vrmc: vrmcMeta });
+            resolve(vrmMeta);
         };
 
         reader.onerror = (error) => {
@@ -71,7 +62,6 @@ const loadVrmMetadataFromFile = async (file: File): Promise<ifMetadata> => {
 };
 const VrmMetadataViewer = () => {
     const [vrmMeta, setVrmMeta] = useState<tVRM>(null);
-    const [vrmcMeta, setVrmcMeta] = useState<tVRMC>(null);
 
     const [error, setError] = useState<any>(null);
 
@@ -81,13 +71,11 @@ const VrmMetadataViewer = () => {
         if (file) {
             try {
                 const result = await loadVrmMetadataFromFile(file);
-                setVrmMeta(result.vrm);
-                setVrmcMeta(result.vrmc);
+                setVrmMeta(result);
                 setError(null);
             } catch (err) {
                 setError(err);
                 setVrmMeta(null);
-                setVrmcMeta(null);
             }
         }
     };
@@ -104,8 +92,6 @@ const VrmMetadataViewer = () => {
                 {
                     vrmMeta ? (
                         displayMetadataVRM(vrmMeta)
-                    ) : vrmcMeta ? (
-                        displayMetadataVRMC(vrmcMeta)
                     ) : (
                         !error && <p>No file uploaded or invalid VRM file.</p>
                     )
